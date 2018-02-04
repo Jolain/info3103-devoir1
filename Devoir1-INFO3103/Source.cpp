@@ -51,20 +51,13 @@ int main() {
 
 	// ------------ 3 --------------
 	// (bcd) -> (binaire)
-	char temp = '0';
-	// Assignage individuel des bytes
-	int i = 0, j = 0;
-	while (((i < sizeof(unpck_bcd)) || unpck_bcd > 0) && (temp != '\0')) {
-		j = i * 4; // Correction pour loop
-		temp = *(((char*) &unpck_bcd) + i); // Prend la valeur de chaque bytes de "unpck_bcd" et les mets dans un temp char
 
-		// Fait la conversion de base 10 a base 2
-		while ((int)temp > 0) {
-			result += ((int)temp % 2) << j;
-			temp = (int)temp / 2;
-			j += 1; // Pousse le pointeur vers le prochain charactère [0-1]
-		}
-		unpck_bcd = unpck_bcd >> 4;
+	decallage = 0;
+	// Assignage individuel des bytes
+	while (unpck_bcd > 0) {
+		result += (unpck_bcd % 2) << decallage;
+		unpck_bcd = unpck_bcd / 2;
+		decallage += 4; // Prend 4-bit par charactere 1 ou 0
 	}
 	// -----------------------------
 
@@ -73,18 +66,17 @@ int main() {
 	// ----------- 4 ---------------
 	// (binaire) -> (affichage)
 	int k = 0;
-	temp = '0';
-	while (temp != '\0') {
-		temp = *(((char*)&result) + k * 2); // Prend la valeur de chaque bytes de "result" et les mets dans un temp char
-		out[k] = temp;
-		k++;
+	auto temp = *((char*)&result);
+	while (result != 0) {
+		for (int n = 0; n < 4; n++) {
+			temp = *((char*)&result + n);
+			if (temp != '\0') { out[k + n % 4] = *((char*)&result + n) * pow(2, n); } // Fait la conversion de binaire a decimal
+		}
+		result = result >> 8;
+		k += 4;
 	}
 	
-	cout << "La valeur entrée est: ";
-	while (k != 0) {
-		cout << out[k];
-		k--;
-	}
+	cout << "La valeur entrée est: " << out;
 	cout << endl;
 
 	system("PAUSE");
