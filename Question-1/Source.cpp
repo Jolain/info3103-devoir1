@@ -1,16 +1,18 @@
 #include <iostream>
 #include <stdio.h>
+#include <math.h>
+#include <string.h>
 
 using namespace std;
 
 int main() {
 
-	char in[128]; // Sauve l'input pour vérification
+	char in[128]; // Sauve l'input pour vï¿½rification
 	char out[128]; // Output vers la console de la valeure
-	int decimalNum; // Contiens la valeur entrée (char -> int)
+	int decimalNum; // Contiens la valeur entrï¿½e (char -> int)
 	unsigned long long unpck_bcd = 0; // Contient la valeure BCD
 	unsigned long long result = 0; // Contient la valeure finale en binaire
-	int decallage = 0; // Utilisé pour faire la conversion int -> bcd. Tiens compte du nombre de bytes a décaller par la gauche.
+	int decallage = 0; // Utilisï¿½ pour faire la conversion int -> bcd. Tiens compte du nombre de bytes a dï¿½caller par la gauche.
 	bool loop = true; // Input validation
 
 	cout << "Jolain Poirier - A00192864" << endl;
@@ -25,7 +27,7 @@ int main() {
 			if (c == '\0') { break; }
 			else if (!isdigit(c)) {
 				cin.ignore(128, '\n');
-				memset(in, 0, sizeof(in)); // Clear l'array si des mauvaises données ont été entrées
+				memset(in, 0, sizeof(in)); // Clear l'array si des mauvaises donnï¿½es ont ï¿½tï¿½ entrï¿½es
 				cout << "Entree invalide. Entrez des nombres : ";
 				loop = true;
 				break;
@@ -39,7 +41,7 @@ int main() {
 	// (char) -> (int)
 	decimalNum = atoi(in);
 
-	// 1 bytes (8-bit) par charactère, ie: 15 = [0000][0001] [0000][0010]
+	// 1 bytes (8-bit) par charactï¿½re, ie: 15 = [0000][0001] [0000][0010]
 	while (decimalNum > 0) {
 		unpck_bcd += (decimalNum % 10) << decallage;
 		decimalNum = decimalNum / 10;
@@ -76,7 +78,7 @@ int main() {
 		k += 4;
 	}
 	
-	cout << "La valeur entrée est: " << out;
+	cout << "La valeur entrï¿½e est: " << out;
 	cout << endl;
 
 	system("PAUSE");
