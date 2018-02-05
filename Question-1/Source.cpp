@@ -40,35 +40,40 @@ int main() {
 	// -------------- 2 -------------
 	// (char) -> (int)
 	decimalNum = atoi(in);
-
+	cout << "Nombre BCD inversé: ";
 	// 1 bytes (8-bit) par charact�re, ie: 15 = [0000][0001] [0000][0010]
 	while (decimalNum > 0) {
 		unpck_bcd += (decimalNum % 10) << decallage;
+		cout << decimalNum % 10 << "0";
 		decimalNum = decimalNum / 10;
 		decallage += 8; // Pousse le pointeur binaire vers le prochain byte (8 bit par la gauche)
 	}
+	cout << endl;
 	// -----------------------------
-
-	cout << "Nombre en BCD unpacked: " << unpck_bcd << endl;
 
 	// ------------ 3 --------------
 	// (bcd) -> (binaire)
 
 	decallage = 0;
+	cout << "Nombre binaire inversé: ";
 	// Assignage individuel des bytes
+	int i = 0, j = 0, temp;
 	while (unpck_bcd > 0) {
-		result += (unpck_bcd % 2) << decallage;
-		unpck_bcd = unpck_bcd / 2;
-		decallage += 4; // Prend 4-bit par charactere 1 ou 0
+		temp = atoi((char*)&unpck_bcd + i);
+		for(j = 0; j < 4; j++) {
+			result += (temp % 2) << decallage;
+			cout << temp % 2;
+			temp = temp / 2;
+			decallage += 1; // Procède bit par bit
+		}
+		unpck_bcd = unpck_bcd << 4; // Après processing du byte, process le prochain
 	}
 	// -----------------------------
-
-	cout << "Nombre en binaire: " << result << endl;
 
 	// ----------- 4 ---------------
 	// (binaire) -> (affichage)
 	int k = 0;
-	auto temp = *((char*)&result);
+	temp = *((char*)&result);
 	while (result != 0) {
 		for (int n = 0; n < 4; n++) {
 			temp = *((char*)&result + n);
@@ -78,8 +83,9 @@ int main() {
 		k += 4;
 	}
 	
-	cout << "La valeur entr�e est: " << out;
+	cout << "La valeur entree est: " << out;
 	cout << endl;
 
 	system("PAUSE");
+	// -----------------------------
 }
