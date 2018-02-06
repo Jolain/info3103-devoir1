@@ -7,8 +7,7 @@ using namespace std;
 
 int main() {
 
-	char in[128]; // Sauve l'input pour v�rification
-	char out[128]; // Output vers la console de la valeure
+	char in[32]; // Sauve l'input pour v�rification
 	int decimalNum; // Contiens la valeur entr�e (char -> int)
 	unsigned long long unpck_bcd = 0; // Contient la valeure BCD
 	unsigned long long result = 0; // Contient la valeure finale en binaire
@@ -38,52 +37,65 @@ int main() {
 
 
 	// -------------- 2 -------------
-	// (char) -> (int)
+	// (char) -> (bcd)
 	decimalNum = atoi(in);
-	cout << "Nombre BCD inversé: ";
 	// 1 bytes (8-bit) par charact�re, ie: 15 = [0000][0001] [0000][0010]
 	while (decimalNum > 0) {
 		unpck_bcd += (decimalNum % 10) << decallage;
-		cout << decimalNum % 10 << "0";
 		decimalNum = decimalNum / 10;
 		decallage += 8; // Pousse le pointeur binaire vers le prochain byte (8 bit par la gauche)
 	}
-	cout << endl;
 	// -----------------------------
 
 	// ------------ 3 --------------
 	// (bcd) -> (binaire)
 
 	decallage = 0;
-	cout << "Nombre binaire inversé: ";
-	// Assignage individuel des bytes
-	int i = 0, j = 0, temp;
+	// Conversion de chaque caractère en bit
+	// *** Lors de la conversion en BCD, les nombres sont déjà codés en binaires dans la mémoire
+	// donc il n'est pas nécessaire de coder en binaire en plus. Sinon, avec mon format, l'algorithme
+	// ne fonctionne seulement qu'avec des nombres a un charactère. Cette partie copie et supprime
+	// bit par bit la valeure BCD pour simuler la conversion en binaire.
+
+	int bit = 0, temp;
 	while (unpck_bcd > 0) {
-		temp = atoi((char*)&unpck_bcd + i);
-		for(j = 0; j < 4; j++) {
-			result += (temp % 2) << decallage;
-			cout << temp % 2;
-			temp = temp / 2;
-			decallage += 1; // Procède bit par bit
-		}
-		unpck_bcd = unpck_bcd << 4; // Après processing du byte, process le prochain
+		temp = unpck_bcd & 1; // Retourne la valeur du bit (1 ou 0)
+		result += temp << bit; 
+		unpck_bcd = unpck_bcd >> 1; // Shift la valeur de unpck_bcd de 1 bit pour parcourir au complet
+		bit++;
 	}
 	// -----------------------------
 
 	// ----------- 4 ---------------
 	// (binaire) -> (affichage)
-	int k = 0;
-	temp = *((char*)&result);
-	while (result != 0) {
-		for (int n = 0; n < 4; n++) {
-			temp = *((char*)&result + n);
-			if (temp != '\0') { out[k + n % 4] = *((char*)&result + n) * pow(2, n); } // Fait la conversion de binaire a decimal
-		}
-		result = result >> 8;
-		k += 4;
+
+	// Comme l'information a été stocké dans un format BCD et puis converti en "binaire", les données
+	// a ce point ci ont subi les transformations suivantes:
+	// (chaque bracket représente 4-bits sur la mémoire)
+
+	//					 BCD           Codé binaire
+	// ie: (int) 57 -> [05][07] -> [0000][0101] [0000][0111]
+
+	bit = 0;
+	bool found = false;
+	char output[32];
+	memset(output, '\0', sizeof(output));
+	int i = 0;
+
+	// Parcours le long long à partir du least significant bit, 4 bits a la fois
+	while (result > 0) {
+		temp = result & 0b1111;
+		output[i] = temp;
+		i++;
+		result = result >> 8; // Saute les [0000] du BCD
 	}
-	
-	cout << "La valeur entree est: " << out;
+	i--; // Correction du pointeur pour retourner sur le bon charactère
+
+	cout << "La valeur entree est: ";
+	while (i >= 0) {
+		cout << (int)output[i];
+		i--;
+	}
 	cout << endl;
 
 	system("PAUSE");
