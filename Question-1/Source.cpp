@@ -71,10 +71,10 @@ int main() {
 
 	// Comme l'information a été stocké dans un format BCD et puis converti en "binaire", les données
 	// a ce point ci ont subi les transformations suivantes:
-	// (chaque bracket représente 4-bits sur la mémoire)
+	// (chaque bracket représente 8-bits sur la mémoire
 
 	//					 BCD           Codé binaire
-	// ie: (int) 57 -> [05][07] -> [0000][0101] [0000][0111]
+	// ie: (int) 57 -> [05][07] -> [00000101][00000111]
 
 	bit = 0;
 	bool found = false;
