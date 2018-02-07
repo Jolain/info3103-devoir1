@@ -97,9 +97,7 @@ int main() {
 	char tmpChar = '0';
 	for (int it = 0; it < strlen(input); it++) {
 		if (base <= 10 || input[it] <= '9') {
-			cout << input[it] << " == " << atoi(&input[it]) << endl;
 			tmpChar = input[it];
-			cout << input[it] << " == " << atoi(&tmpChar) << endl;
 			unpck_bcd += atoi(&tmpChar);
 		}
 		else {
