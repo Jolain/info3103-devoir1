@@ -26,7 +26,7 @@ int main() {
 		cin >> input;
 		for (auto c : input) {
 			if (c == '\0') { break; }
-			else if (!isdigit(c) || (int)c > 16 || (int)c < 2) {
+			else if (!isdigit(c) || atoi(input) > 16 || atoi(input) < 2) {
 				cin.ignore(128, '\n');
 				memset(input, '\0', sizeof(input)); // Clear l'array si des mauvaises donn�es ont �t� entr�es
 				cout << "Entree invalide. Entrez une valeur entre 2 et 16: ";
@@ -37,7 +37,7 @@ int main() {
 		}
 	}
 
-	base = (int)input;
+	base = atoi(input);
 
 	// Déterminer la valeur maximale
 	if (base <= 10) {
@@ -47,20 +47,26 @@ int main() {
 		switch (base) {
 			case 11:
 				maxChar = 'A';
+				break;
 			case 12:
 				maxChar = 'B';
+				break;
 			case 13:
 				maxChar = 'C';
+				break;
 			case 14:
 				maxChar = 'D';
+				break;
 			case 15:
 				maxChar = 'E';
+				break;
 			case 16:
 				maxChar = 'F';
+				break;
 		}
 	}
 
-	cout << "Entrez la valeur a convertir en pseudo-BCD unpacked :";
+	cout << "Entrez la valeur a convertir en pseudo-BCD unpacked: ";
 
 	// Input validation pour le nombre
 	memset(input, '\0', sizeof(input)); // Clear l'array avant l'entrée de nouvelles données
@@ -72,7 +78,7 @@ int main() {
 			else if (base <= 9 ? !isdigit(c) : (!isdigit(c) && (toupper(c) < 'A' || toupper(c) > maxChar))) {
 				cin.ignore(128, '\n');
 				memset(input, '\0', sizeof(input)); // Clear l'array si des mauvaises donn�es ont �t� entr�es
-				cout << "Entree invalide. Entrez des nombres : ";
+				cout << "Entree invalide. Essayez a nouveau: ";
 				loop = true;
 				break;
 			}
@@ -83,14 +89,40 @@ int main() {
 
 
 	// -------------- 2 -------------
-	// (char) -> (bcd)
+	// (char) -> (pseudo-bcd)
 
 	// 1 nibble (4-bit) par charact�re, ie: 15 = [0000][0001] [0000][0010]
-	while (decimalNum > 0) {
-		unpck_bcd += (decimalNum % 10) << decallage;
-		decimalNum = decimalNum / 10;
-		decallage += 8; 
+
+	// Trouver l'itérateur opposé (besoin du bit with least value)
+	for (int it = 0; it < strlen(input); it++) {
+		if (base <= 10 || input[it] <= '9') {
+			cout << input[it] << " == " << atoi(&input[it]) << endl;
+			unpck_bcd += atoi(&input[it]);
+		}
+		else {
+			switch (toupper(input[it])) {
+				case 'A':
+					unpck_bcd += 0b1010;
+					break;
+				case 'B':
+					unpck_bcd += 0b1011;
+					break;
+				case 'C':
+					unpck_bcd += 0b1100;
+					break;
+				case 'D':
+					unpck_bcd += 0b1101;
+					break;
+				case 'E':
+					unpck_bcd += 0b1110;
+					break;
+				case 'F':
+					unpck_bcd += 0b1111;
+			}
+		}
+		unpck_bcd = unpck_bcd << 8;
 	}
+	unpck_bcd = unpck_bcd >> 8; // Correction de la boucle
 	// -----------------------------
 
 	// ------------ 3 --------------
@@ -131,7 +163,33 @@ int main() {
 	// Parcours le long long à partir du least significant bit, 4 bits a la fois
 	while (result > 0) {
 		temp = result & 0b1111;
-		output[i] = temp;
+		if (base <= 10 || temp < 10) {
+			output[i] = temp;
+		}
+		else {
+			char c = '0';
+			switch (temp) {
+				case 10:
+					c = 'A';
+					break;
+				case 11:
+					c = 'B';
+					break;
+				case 12:
+					c = 'C';
+					break;
+				case 13:
+					c = 'D';
+					break;
+				case 14:
+					c = 'E';
+					break;
+				case 15:
+					c = 'F';
+					break;
+			}
+			output[c] = c;
+		}
 		i++;
 		result = result >> 8; // Saute les [0000] du BCD
 	}
