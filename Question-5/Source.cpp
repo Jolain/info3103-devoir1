@@ -16,8 +16,8 @@ int main() {
 	bool loop = true; // Input validation
 
 	cout << "Jolain Poirier - A00192864" << endl;
-	cout << "INFO3103 - Devoir #1: Question #3" << endl << endl;
-	cout << "Entrez la base numérique [2-16]: ";
+	cout << "INFO3103 - Devoir #1: Question #5" << endl << endl;
+	cout << "Entrez la base numérique voulue [2-16]: ";
 
 	// ------------- 1 ---------------
 	// Input validation pour la base
@@ -65,7 +65,7 @@ int main() {
 		}
 	}
 
-	cout << "Entrez la valeur a convertir en pseudo-BCD unpacked: ";
+	cout << "Entrez la valeur a convertir en base " << base << ": ";
 
 	// Input validation pour le nombre
 	memset(input, '\0', sizeof(input)); // Clear l'array avant l'entrée de nouvelles données
@@ -74,7 +74,7 @@ int main() {
 		cin >> input;
 		for (auto c : input) {
 			if (c == '\0') { break; }
-			else if (base <= 9 ? !isdigit(c) : (!isdigit(c) && (toupper(c) < 'A' || toupper(c) > maxChar))) {
+			else if (!isdigit(c)) {
 				cin.ignore(128, '\n');
 				memset(input, '\0', sizeof(input)); // Clear l'array si des mauvaises donn�es ont �t� entr�es
 				cout << "Entree invalide. Essayez a nouveau: ";
@@ -88,64 +88,15 @@ int main() {
 
 
 	// -------------- 2 -------------
-	// (char) -> (pseudo-bcd)
+	// (convertion)
 
-	// 1 nibble (4-bit) par charact�re, ie: 15 = [0000][0001] [0000][0010]
 
-	// Trouver l'itérateur opposé (besoin du bit with least value)
-	char tmpChar = '0';
-	for (int it = 0; it < strlen(input); it++) {
-		if (base <= 10 || input[it] <= '9') {
-			tmpChar = input[it];
-			unpck_bcd += atoi(&tmpChar);
-		}
-		else {
-			switch (toupper(input[it])) {
-			case 'A':
-				unpck_bcd += 0b1010;
-				break;
-			case 'B':
-				unpck_bcd += 0b1011;
-				break;
-			case 'C':
-				unpck_bcd += 0b1100;
-				break;
-			case 'D':
-				unpck_bcd += 0b1101;
-				break;
-			case 'E':
-				unpck_bcd += 0b1110;
-				break;
-			case 'F':
-				unpck_bcd += 0b1111;
-			}
-		}
-		unpck_bcd = unpck_bcd << 8;
-	}
-	unpck_bcd = unpck_bcd >> 8; // Correction de la boucle
-								// -----------------------------
 
-								// ------------ 3 --------------
-								// (bcd) -> (binaire)
 
-	decallage = 0;
-	// Conversion de chaque caractère en bit
-	// *** Lors de la conversion en BCD, les nombres sont déjà codés en binaires dans la mémoire
-	// donc il n'est pas nécessaire de coder en binaire en plus. Sinon, avec mon format, l'algorithme
-	// ne fonctionne seulement qu'avec des nombres a un charactère. Cette partie copie et supprime
-	// bit par bit la valeure BCD pour simuler la conversion en binaire.
-
-	int bit = 0, temp;
-	while (unpck_bcd > 0) {
-		temp = unpck_bcd & 1; // Retourne la valeur du bit (1 ou 0)
-		result += temp << bit;
-		unpck_bcd = unpck_bcd >> 1; // Shift la valeur de unpck_bcd de 1 bit pour parcourir au complet
-		bit++;
-	}
 	// -----------------------------
 
-	// ----------- 4 ---------------
-	// (binaire) -> (affichage)
+	// ----------- 3 ---------------
+	// (affichage)
 
 	// Comme l'information a été stocké dans un format BCD et puis converti en "binaire", les données
 	// a ce point ci ont subi les transformations suivantes:
