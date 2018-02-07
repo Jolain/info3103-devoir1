@@ -9,7 +9,6 @@ int main() {
 
 	int base; // La base numérique avec laquelle on travaille
 	char maxChar = 0; // Représente la valeure max de la base alpha-numériquement
-	int maxValue = 0; // Représente la valeure max de la base en int
 	char input[32]; // Stocke l'input pour verification et manipulation
 	unsigned long long unpck_bcd = 0; // Contient la valeure BCD
 	unsigned long long result = 0; // Contient la valeure finale en binaire
