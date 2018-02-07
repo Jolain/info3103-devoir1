@@ -8,9 +8,9 @@ using namespace std;
 int main() {
 
 	int base; // La base numérique avec laquelle on travaille
-	char maxValue = 0; // Représente la valeur maximale qu'un nombre peut avoir dépendant de la base
-	char number[32]; // Stocke l'input pour manipulation
-	char input[32]; // Sauve l'input pour v�rification
+	char maxChar = 0; // Représente la valeure max de la base alpha-numériquement
+	int maxValue = 0; // Représente la valeure max de la base en int
+	char input[32]; // Stocke l'input pour verification et manipulation
 	unsigned long long unpck_bcd = 0; // Contient la valeure BCD
 	unsigned long long result = 0; // Contient la valeure finale en binaire
 	int decallage = 0; // Utilis� pour faire la conversion int -> bcd. Tiens compte du nombre de bytes a d�caller par la gauche.
@@ -41,22 +41,22 @@ int main() {
 
 	// Déterminer la valeur maximale
 	if (base <= 10) {
-		maxValue = base;
+		maxChar = base;
 	}
 	else {
 		switch (base) {
 			case 11:
-				maxValue = 'A';
+				maxChar = 'A';
 			case 12:
-				maxValue = 'B';
+				maxChar = 'B';
 			case 13:
-				maxValue = 'C';
+				maxChar = 'C';
 			case 14:
-				maxValue = 'D';
+				maxChar = 'D';
 			case 15:
-				maxValue = 'E';
+				maxChar = 'E';
 			case 16:
-				maxValue = 'F';
+				maxChar = 'F';
 		}
 	}
 
@@ -69,7 +69,7 @@ int main() {
 		cin >> input;
 		for (auto c : input) {
 			if (c == '\0') { break; }
-			else if (c <= 9 ? !isdigit(c) : (!isdigit(c) && (c < 'A' || c > maxValue))) {
+			else if (base <= 9 ? !isdigit(c) : (!isdigit(c) && (toupper(c) < 'A' || toupper(c) > maxChar))) {
 				cin.ignore(128, '\n');
 				memset(input, '\0', sizeof(input)); // Clear l'array si des mauvaises donn�es ont �t� entr�es
 				cout << "Entree invalide. Entrez des nombres : ";
@@ -79,18 +79,17 @@ int main() {
 			else { loop = false; }
 		}
 	}
-
 	// ------------------------------
 
 
 	// -------------- 2 -------------
 	// (char) -> (bcd)
-	decimalNum = atoi(in);
-	// 1 bytes (8-bit) par charact�re, ie: 15 = [0000][0001] [0000][0010]
+
+	// 1 nibble (4-bit) par charact�re, ie: 15 = [0000][0001] [0000][0010]
 	while (decimalNum > 0) {
 		unpck_bcd += (decimalNum % 10) << decallage;
 		decimalNum = decimalNum / 10;
-		decallage += 8; // Pousse le pointeur binaire vers le prochain byte (8 bit par la gauche)
+		decallage += 8; 
 	}
 	// -----------------------------
 
