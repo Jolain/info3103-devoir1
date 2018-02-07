@@ -60,7 +60,7 @@ int main() {
 		}
 	}
 
-	cout << "Entrez la valeur a convertir en pseudo-BCD unpacked";
+	cout << "Entrez la valeur a convertir en pseudo-BCD unpacked :";
 
 	// Input validation pour le nombre
 	memset(input, '\0', sizeof(input)); // Clear l'array avant l'entrée de nouvelles données
