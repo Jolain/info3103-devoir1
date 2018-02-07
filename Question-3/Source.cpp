@@ -7,26 +7,71 @@ using namespace std;
 
 int main() {
 
-	char in[32]; // Sauve l'input pour v�rification
-	int decimalNum; // Contiens la valeur entr�e (char -> int)
+	int base; // La base numérique avec laquelle on travaille
+	char maxValue = 0; // Représente la valeur maximale qu'un nombre peut avoir dépendant de la base
+	char number[32]; // Stocke l'input pour manipulation
+	char input[32]; // Sauve l'input pour v�rification
 	unsigned long long unpck_bcd = 0; // Contient la valeure BCD
 	unsigned long long result = 0; // Contient la valeure finale en binaire
 	int decallage = 0; // Utilis� pour faire la conversion int -> bcd. Tiens compte du nombre de bytes a d�caller par la gauche.
 	bool loop = true; // Input validation
 
 	cout << "Jolain Poirier - A00192864" << endl;
-	cout << "INFO3103 - Devoir #1: Question #1" << endl << endl;
-	cout << "Entrez un entier a convertir en BCD Unpacked: ";
+	cout << "INFO3103 - Devoir #1: Question #3" << endl << endl;
+	cout << "Entrez la base numérique [2-16]: ";
 
 	// ------------- 1 ---------------
-	// Input validation
+	// Input validation pour la base
 	while (loop) {
-		cin >> in;
-		for (auto c : in) {
+		cin >> input;
+		for (auto c : input) {
 			if (c == '\0') { break; }
-			else if (!isdigit(c)) {
+			else if (!isdigit(c) || (int)c > 16 || (int)c < 2) {
 				cin.ignore(128, '\n');
-				memset(in, 0, sizeof(in)); // Clear l'array si des mauvaises donn�es ont �t� entr�es
+				memset(input, '\0', sizeof(input)); // Clear l'array si des mauvaises donn�es ont �t� entr�es
+				cout << "Entree invalide. Entrez une valeur entre 2 et 16: ";
+				loop = true;
+				break;
+			}
+			else { loop = false; }
+		}
+	}
+
+	base = (int)input;
+
+	// Déterminer la valeur maximale
+	if (base <= 10) {
+		maxValue = base;
+	}
+	else {
+		switch (base) {
+			case 11:
+				maxValue = 'A';
+			case 12:
+				maxValue = 'B';
+			case 13:
+				maxValue = 'C';
+			case 14:
+				maxValue = 'D';
+			case 15:
+				maxValue = 'E';
+			case 16:
+				maxValue = 'F';
+		}
+	}
+
+	cout << "Entrez la valeur a convertir en pseudo-BCD unpacked";
+
+	// Input validation pour le nombre
+	memset(input, '\0', sizeof(input)); // Clear l'array avant l'entrée de nouvelles données
+	loop = true;
+	while (loop) {
+		cin >> input;
+		for (auto c : input) {
+			if (c == '\0') { break; }
+			else if (c <= 9 ? !isdigit(c) : (!isdigit(c) && (c < 'A' || c > maxValue))) {
+				cin.ignore(128, '\n');
+				memset(input, '\0', sizeof(input)); // Clear l'array si des mauvaises donn�es ont �t� entr�es
 				cout << "Entree invalide. Entrez des nombres : ";
 				loop = true;
 				break;
@@ -34,6 +79,7 @@ int main() {
 			else { loop = false; }
 		}
 	}
+
 	// ------------------------------
 
 
