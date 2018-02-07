@@ -94,10 +94,13 @@ int main() {
 	// 1 nibble (4-bit) par charact�re, ie: 15 = [0000][0001] [0000][0010]
 
 	// Trouver l'itérateur opposé (besoin du bit with least value)
+	char tmpChar = '0';
 	for (int it = 0; it < strlen(input); it++) {
 		if (base <= 10 || input[it] <= '9') {
 			cout << input[it] << " == " << atoi(&input[it]) << endl;
-			unpck_bcd += atoi(&input[it]);
+			tmpChar = input[it];
+			cout << input[it] << " == " << atoi(&tmpChar) << endl;
+			unpck_bcd += atoi(&tmpChar);
 		}
 		else {
 			switch (toupper(input[it])) {
@@ -164,7 +167,7 @@ int main() {
 	while (result > 0) {
 		temp = result & 0b1111;
 		if (base <= 10 || temp < 10) {
-			output[i] = temp;
+			output[i] = (char)temp;
 		}
 		else {
 			char c = '0';
@@ -188,7 +191,7 @@ int main() {
 					c = 'F';
 					break;
 			}
-			output[c] = c;
+			output[i] = c;
 		}
 		i++;
 		result = result >> 8; // Saute les [0000] du BCD
@@ -197,7 +200,12 @@ int main() {
 
 	cout << "La valeur entree est: ";
 	while (i >= 0) {
-		cout << (int)output[i];
+		if (!isalpha(output[i])) {
+			cout << (char)('0' + output[i]);  // Force la conversion en char de output[i]
+		}
+		else {
+			cout << output[i];
+		}
 		i--;
 	}
 	cout << endl;
